@@ -6,33 +6,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temp-Anomaly</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" defer></script>
 </head>
 
 <body>
-    <canvas id="chart" width="800" height="450">
-        <script>
-            const ctx = document.getElementById('chart').getContext('2d');
+    <canvas id="chart" width="800" height="450"></canvas>
+    <script>
+        "use strict";
+        async function getData() {
+            const xs = []
+            const ys = []
+            const data = await fetch("./ZonAnn.Ts+dSST.csv")
+            const res = await data.text()
+            const table = await res.split('\n').slice(2)
+            table.forEach(elt => {
+                const rows = elt.split(', ')
+                const year = rows[0]
+                xs.push(year)
+                const temp = rows[1]
+                ys.push(temp)
+                console.log(year, temp)
+            })
+            return { xs, ys }
+        }
+        getData();
+
+        async function chartIt() {
+            const data = await getData();
+            const ctx = document.getElementById('chart');
             const myChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
+                fill: false,
                 data: {
-                    labels: [] ,
+                    labels: data.ys,
                     datasets: [{
                         label: 'Temperature anomalies',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        data: [] ,
+                        data: data.xs,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
                     }]
                 },
-                type: 'line',
-                fill: false,
-                data: data,
                 options: {
                     scales: {
                         y: {
                             ticks: {
-                                // Include a dollar sign in the ticks
                                 callback: function (value, index, values) {
                                     return value + "°"
                                 }
@@ -41,8 +59,9 @@
                     }
                 }
             });
-        </script>
-    </canvas>
+        }
+    </script>
+
 </body>
 
 </html>
