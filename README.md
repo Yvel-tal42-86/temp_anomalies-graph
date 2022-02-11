@@ -1,1 +1,0 @@
-# temp_anomalies-graph
