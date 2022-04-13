@@ -15,8 +15,8 @@
     <script>
         "use strict";
         async function getData() {
-            const xs = []
-            const ys = []
+            const xs = [];
+            const ys = [];
             const data = await fetch("./ZonAnn.Ts+dSST.csv");
             //const data1 = await fetch("./SH.Ts+dSST.csv");
             //const data2 = await fetch("./NH.Ts+dSST.csv");
@@ -27,17 +27,16 @@
             //const table1 = await res1.split('\n').slice(2);
             //const table2 = await res2.split('\n').slice(2);
             table.forEach(elt => {
-                const rows = elt.split(', ');
+                const rows = elt.split(', ')
                 const year = rows[0]
-                xs.push(year);
+                xs.push(year)
                 const temp = rows[1]
-                ys.push(temp);
-                console.log(year, temp);
+                ys.push(temp)
+                console.log(year, temp)
             });
             return { xs, ys }
         }
         getData();
-
         async function chartIt() {
             const data = await getData();
             const ctx = document.getElementById("chart").getContext("2d");
