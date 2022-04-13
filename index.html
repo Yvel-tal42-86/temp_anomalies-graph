@@ -17,32 +17,16 @@
         async function getData() {
             const xs = [];
             const ys = [];
-            const data1 = await fetch("./ZonAnn.Ts+dSST.csv");
-            const data2 = await fetch("./SH.Ts+dSST.csv");
-            const data3 = await fetch("./NH.Ts+dSST.csv");
-            const res1 = await data1.text();
-            const res2 = await data2.text();
-            const res3 = await data3.text();
-            const table1 = await res1.split('\n').slice(2);
-            const table2 = await res2.split('\n').slice(2);
-            const table3 = await res3.split('\n').slice(2);
-            table1.forEach(elt => {
-                const rows = elt.split(', ');
-                const year = rows[0];
-                xs.push(year);
-                const temp = rows[1];
-                ys.push(temp);
-                console.log(year, temp);
-            });
-            table2.forEach(elt => {
-                const rows = elt.split(', ');
-                const year = rows[0];
-                xs.push(year);
-                const temp = rows[1];
-                ys.push(temp);
-                console.log(year, temp);
-            });
-            table3.forEach(elt => {
+            const data = await fetch("./ZonAnn.Ts+dSST.csv");
+            //const data1 = await fetch("./SH.Ts+dSST.csv");
+            //const data2 = await fetch("./NH.Ts+dSST.csv");
+            const res = await data.text();
+            //const res1 = await data1.text();
+            //const res2 = await data2.text();
+            const table = await res.split('\n').slice(2);
+            //const table1 = await res1.split('\n').slice(2);
+            //const table2 = await res2.split('\n').slice(2);
+            table.forEach(elt => {
                 const rows = elt.split(', ');
                 const year = rows[0];
                 xs.push(year);
