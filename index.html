@@ -11,39 +11,39 @@
 </head>
 
 <body>
-    <canvas id="chart" style="width:100%;max-width:700px"></canvas>
+    <canvas id="chart" style="width:100%;max-width:700px" height="500"></canvas>
     <script>
         "use strict";
         async function getData() {
             const xs = [];
             const ys = [];
-            const data = await fetch("./ZonAnn.Ts+dSST.csv");
-            const res = await data.text();
+            const data1 = await fetch("./ZonAnn.Ts+dSST.csv");
+            const res = await data1.text();
             const table = await res.split('\n').slice(2);
             table.forEach(elt => {
-                const rows = elt.split(', ')
-                const year = rows[0]
-                xs.push(year)
-                const temp = rows[1]
-                ys.push(temp)
-                console.log(year, temp)
+                const rows = elt.split(', ');
+                const year = rows[0];
+                xs.push(year);
+                const temp = rows[1];
+                ys.push(temp);
+                console.log(year, temp);
             });
             return { xs, ys }
         }
         getData();
 
         async function chartIt() {
-            const data = await getData();
+            const data1 = await getData();
             const ctx = document.getElementById("chart").getContext("2d");
             const myChart = new Chart(ctx, {
                 type: 'line',
                 fill: false,
                 data: {
-                    labels: data.xs,
+                    labels: data1.xs,
                     datasets: [{
                         label: "Temperature anomalies",
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        data: data.ys,
+                        data: data1.ys,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
                     }]
@@ -53,7 +53,7 @@
                         y: {
                             ticks: {
                                 callback: function (value, index, values) {
-                                    return value + "°"
+                                    return value + "°";
                                 }
                             }
                         }
