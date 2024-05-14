@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div style="padding: 2em; margin: 0">
-        <h3>N.Hemi Temperature Anomalies (°C) <span style="font-size: small; font-weight: 400;">AIRS v6 vs.
+        <h3>Temperature Anomalies (°C) <span style="font-size: small; font-weight: 400;">AIRS v6 vs.
                 2007-2016</span></h2>
             <canvas id="chart" aria-label="Temperature Anomalies" role="img" style="width: 100%">
                 <p>Error loading!</p>
@@ -23,6 +23,8 @@
         async function getData() {
             const xs = [];
             const ys = [];
+            const ys1 = [];
+            const ys2 = [];
             const data = await fetch("./ZonAnn.Ts+dSST.csv");
             const data2 = await fetch("./SH.Ts+dSST.csv");
             const data3 = await fetch("./NH.Ts+dSST.csv");
@@ -39,7 +41,19 @@
                 const temp = rows[1];
                 ys.push(temp);
             });
-            return { xs, ys };
+            table2.forEach((elt) => {
+                const rows = elt.split(", ");
+                const year = rows[0];
+                const temp = rows[1];
+                ys1.push(temp);
+            });
+            table3.forEach((elt) => {
+                const rows = elt.split(", ");
+                const year = rows[0];
+                const temp = rows[1];
+                ys2.push(temp);
+            });
+            return { xs, ys, ys1, ys2 };
         }
         getData();
         async function chartIt() {
@@ -52,15 +66,32 @@
                     labels: data.xs,
                     datasets: [
                         {
-                            label: "Temperature anomalies",
-                            backgroundColor: "rgba(255, 99, 132)",
+                            label: "N.Hemi Temperature Anomalies",
+                            backgroundColor: "#fc03e8",
                             data: data.ys,
-                            borderColor: "rgba(255, 99, 132)",
+                            borderColor: "#fc03e8",
                             borderWidth: 1,
                         },
+                        {
+                            label: "S.Hemi Temperature Anomalies",
+                            backgroundColor: "#03c6fc",
+                            data: data.ys1,
+                            borderColor: "#03c6fc",
+                            borderWidth: 1,
+                        },
+                        {
+                            label: "Annual Temperature Anomalies",
+                            backgroundColor: "#7b03fc",
+                            data: data.ys2,
+                            borderColor: "#7b03fc",
+                            borderWidth: 1,
+                        }
                     ],
                 },
                 options: {
+                    layout: {
+                        Padding: 10
+                    },
                     scales: {
                         y: {
                             ticks: {
@@ -76,4 +107,5 @@
         chartIt();
     </script>
 </body>
+
 </html>
