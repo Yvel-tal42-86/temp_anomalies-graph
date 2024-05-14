@@ -2,72 +2,78 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Temp-Anomaly</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js" integrity="sha512-Lii3WMtgA0C0qmmkdCpsG0Gjr6M0ajRyQRQSbTF6BsrVh/nhZdHpVZ76iMIPvQwz1eoXC3DmAg9K51qT5/dEVg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer ></script>
 </head>
 
-<body>
-    <canvas id="chart" style="width:100%;max-width:700px"></canvas>
+<body style="height: 100vh">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div style="padding: 2em; margin: 0">
+        <h3>N.Hemi Temperature Anomalies (°C) <span style="font-size: small; font-weight: 400;">AIRS v6 vs.
+                2007-2016</span></h2>
+            <canvas id="chart" aria-label="Temperature Anomalies" role="img" style="width: 100%">
+                <p>Error loading!</p>
+            </canvas>
+    </div>
     <script>
         "use strict";
         async function getData() {
             const xs = [];
             const ys = [];
             const data = await fetch("./ZonAnn.Ts+dSST.csv");
-            //const data1 = await fetch("./SH.Ts+dSST.csv");
-            //const data2 = await fetch("./NH.Ts+dSST.csv");
+            const data2 = await fetch("./SH.Ts+dSST.csv");
+            const data3 = await fetch("./NH.Ts+dSST.csv");
             const res = await data.text();
-            //const res1 = await data1.text();
-            //const res2 = await data2.text();
-            const table = await res.split('\n').slice(2);
-            //const table1 = await res1.split('\n').slice(2);
-            //const table2 = await res2.split('\n').slice(2);
-            table.forEach(elt => {
-                const rows = elt.split(', ')
-                const year = rows[0]
-                xs.push(year)
-                const temp = rows[1]
-                ys.push(temp)
-                console.log(year, temp)
+            const res2 = await data2.text();
+            const res3 = await data3.text();
+            const table = await res.split("\n").slice(2);
+            const table2 = await res2.split("\n").slice(2);
+            const table3 = await res3.split("\n").slice(2);
+            table.forEach((elt) => {
+                const rows = elt.split(", ");
+                const year = rows[0];
+                xs.push(year);
+                const temp = rows[1];
+                ys.push(temp);
             });
-            return { xs, ys }
+            return { xs, ys };
         }
         getData();
         async function chartIt() {
             const data = await getData();
             const ctx = document.getElementById("chart").getContext("2d");
             const myChart = new Chart(ctx, {
-                type: 'line',
+                type: "line",
                 fill: false,
                 data: {
                     labels: data.xs,
-                    datasets: [{
-                        label: "Temperature anomalies",
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        data: data.ys,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
+                    datasets: [
+                        {
+                            label: "Temperature anomalies",
+                            backgroundColor: "rgba(255, 99, 132)",
+                            data: data.ys,
+                            borderColor: "rgba(255, 99, 132)",
+                            borderWidth: 1,
+                        },
+                    ],
                 },
                 options: {
                     scales: {
                         y: {
                             ticks: {
                                 callback: function (value, index, values) {
-                                    return value + "°"
-                                }
-                            }
-                        }
-                    }
-                }
+                                    return value + "°";
+                                },
+                            },
+                        },
+                    },
+                },
             });
         }
         chartIt();
     </script>
 </body>
-
 </html>
